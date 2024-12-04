@@ -1,6 +1,30 @@
+'use client';
+
+import React, { useState } from 'react';
 import Head from 'next/head';
+import { auth } from '../utils/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      console.log('Logged in successfully:', user);
+      router.push('/hidensho')
+    } catch (error) {
+      setError('idかパスワードが間違っています。');
+      console.error('Login error:', error);
+    }
+  };
+
   return (
     <div className="login-container">
       <Head>
@@ -14,10 +38,27 @@ export default function LoginPage() {
       <a href="https://valueshukatsu.com/" className="logo-link">
         <img src="/logo.png" alt="VALUE就活" className="logo" />
       </a>
-      <form className="login-form">
-        <input type="text" placeholder="ID" name="id" className="input-field" />
-        <input type="password" placeholder="パスワード" name="password" className="input-field" />
+      <form className="login-form" onSubmit={handleLogin}>
+        <input
+          type="email"
+          placeholder="ID"
+          name="id"
+          className="input-field"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="パスワード"
+          name="password"
+          className="input-field"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
         <button type="submit" className="login-button">ログイン</button>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
         <a href="/forgot-password" className="forgot-password-link">パスワードを忘れた方はこちら</a>
       </form>
     </div>
