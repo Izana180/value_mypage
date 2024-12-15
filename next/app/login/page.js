@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { auth } from '../utils/firebase';
-import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence } from 'firebase/auth';
+import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence, onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
@@ -12,6 +12,16 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [rememberDevice, setRememberDevice] = useState(true);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        router.push('/hidensho');
+      }
+    });
+
+    return () => unsubscribe();
+  }, [router]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -23,11 +33,9 @@ export default function LoginPage() {
       // ログイン
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      // console.log('Logged in successfully:', user);
       router.push('/hidensho');
     } catch (error) {
       setError('idかパスワードが間違っています。');
-      // console.error('Login error:', error);
     }
   };
 
@@ -44,7 +52,7 @@ export default function LoginPage() {
       <a href="https://valueshukatsu.com/" className="logo-link">
         <img src="/logo.png" alt="VALUE就活" className="logo" />
       </a>
-      <form className="login-form" onSubmit={handleLogin}>
+      <form method="POST" className="login-form" onSubmit={handleLogin}>
         <input
           type="email"
           placeholder="ID"
@@ -83,3 +91,4 @@ export default function LoginPage() {
     </div>
   );
 }
+

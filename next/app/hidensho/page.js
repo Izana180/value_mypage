@@ -1,44 +1,102 @@
-"use client"
+"use client";
 
-import React from 'react';
+import React, { useState } from "react";
+import { signOut } from "firebase/auth";
+import { auth } from "../utils/firebase";
+import { useRouter } from "next/navigation";
+import withAuth from "../hoc/withAuth";
 
 const HidenshoPage = () => {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleLogout = async () => {
+    const confirm = window.confirm("ログアウトしますか？");
+    if (!confirm) return;
+    try {
+      await signOut(auth);
+      router.push("/login");
+    } catch (error) {
+      console.error("ログアウトエラー:", error);
+    }
+  };
+
   return (
-    <div style={{ width: '100%', height: '100vh', position: 'relative' }}>
-      {/* ログアウトボタン（実際にはホームへのリンク） */}
-      <a 
-        href="/" 
+    <div style={{ width: "100%", height: "100vh", position: "relative" }}>
+      {/* ログアウトボタン */}
+      <button
+        onClick={handleLogout}
         style={{
-          position: 'absolute',
-          top: '10px',
-          right: '20px',
-          backgroundColor: '#f5f5f5',
-          padding: '8px 16px',
-          borderRadius: '4px',
-          textDecoration: 'none',
-          color: '#333',
-          fontWeight: 'bold',
-          border: '1px solid #ccc',
+          position: "absolute",
+          top: "10px",
+          right: "20px",
+          backgroundColor: "#f5f5f5",
+          padding: "8px 16px",
+          borderRadius: "4px",
+          textDecoration: "none",
+          color: "#333",
+          fontWeight: "bold",
+          border: "1px solid #ccc",
         }}
       >
         ログアウト
-      </a>
+      </button>
+
+      {/* ローディング表示 */}
+      {isLoading && (
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            textAlign: "center",
+          }}
+        >
+          <div
+            style={{
+              width: "40px",
+              height: "40px",
+              border: "4px solid #ccc",
+              borderTop: "4px solid #333",
+              borderRadius: "50%",
+              animation: "spin 1s linear infinite",
+              margin: "0 auto 10px",
+            }}
+          />
+          <p>loading...</p>
+        </div>
+      )}
 
       {/* Alist iframe */}
       <iframe
         src={process.env.NEXT_PUBLIC_ALIST_URL}
         style={{
-          width: '100%',
-          height: '100%',
-          border: 'none',
+          width: "100%",
+          height: "100%",
+          border: "none",
         }}
         title="Hidensho Alist"
+        onLoad={() => setIsLoading(false)}
       />
+
+      {/* スピナーのアニメーション */}
+      <style jsx>{`
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
     </div>
   );
 };
 
-export default HidenshoPage;
+export default withAuth(HidenshoPage);
+
 
 
 // "use client"
