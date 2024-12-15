@@ -6,8 +6,6 @@ import { auth } from "../utils/firebase";
 import { useRouter } from "next/navigation";
 import withAuth from "../hoc/withAuth";
 
-const loading_time_max=10000;
-
 const HidenshoPage = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
@@ -24,14 +22,21 @@ const HidenshoPage = () => {
   };
 
   useEffect(() => {
+    // セーフガード: 10秒後に強制的にloadingを解除
     const timeout = setTimeout(() => {
       setIsLoading(false);
-    }, loading_time_max);
+    }, 10000);
     return () => clearTimeout(timeout);
   }, []);
 
+  const handleIframeLoad = () => {
+    console.log("iframe successfully loaded");
+    setIsLoading(false);
+  };
+
   return (
     <div style={{ width: "100%", height: "100vh", position: "relative" }}>
+      {/* ログアウトボタン */}
       <button
         onClick={handleLogout}
         className="logout-button"
@@ -39,6 +44,7 @@ const HidenshoPage = () => {
         ログアウト
       </button>
 
+      {/* ローディング表示 */}
       {isLoading && (
         <div
           style={{
@@ -64,6 +70,7 @@ const HidenshoPage = () => {
         </div>
       )}
 
+      {/* Alist iframe */}
       <iframe
         src={process.env.NEXT_PUBLIC_ALIST_URL}
         style={{
@@ -72,16 +79,14 @@ const HidenshoPage = () => {
           border: "none",
         }}
         title="Hidensho Alist"
-        onLoad={() => {
-          console.log("iframe loaded successfully");
-          setIsLoading(false);
-        }}
+        onLoad={handleIframeLoad}
         onError={() => {
           console.error("iframe failed to load");
-          setIsLoading(false);
+          setIsLoading(false); // ロード失敗でもloading解除
         }}
       />
 
+      {/* スピナーのアニメーションとレスポンシブデザイン */}
       <style jsx>{`
         @keyframes spin {
           0% {
@@ -118,4 +123,5 @@ const HidenshoPage = () => {
 };
 
 export default withAuth(HidenshoPage);
+
 
