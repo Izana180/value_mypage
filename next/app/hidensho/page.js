@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { signOut } from "firebase/auth";
 import { auth } from "../utils/firebase";
 import { useRouter } from "next/navigation";
 import withAuth from "../hoc/withAuth";
+
+const loading_time_max=10000;
 
 const HidenshoPage = () => {
   const router = useRouter();
@@ -21,9 +23,15 @@ const HidenshoPage = () => {
     }
   };
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsLoading(false);
+    }, loading_time_max);
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
     <div style={{ width: "100%", height: "100vh", position: "relative" }}>
-      {/* ログアウトボタン */}
       <button
         onClick={handleLogout}
         className="logout-button"
@@ -31,7 +39,6 @@ const HidenshoPage = () => {
         ログアウト
       </button>
 
-      {/* ローディング表示 */}
       {isLoading && (
         <div
           style={{
@@ -57,7 +64,6 @@ const HidenshoPage = () => {
         </div>
       )}
 
-      {/* Alist iframe */}
       <iframe
         src={process.env.NEXT_PUBLIC_ALIST_URL}
         style={{
@@ -66,10 +72,16 @@ const HidenshoPage = () => {
           border: "none",
         }}
         title="Hidensho Alist"
-        onLoad={() => setIsLoading(false)}
+        onLoad={() => {
+          console.log("iframe loaded successfully");
+          setIsLoading(false);
+        }}
+        onError={() => {
+          console.error("iframe failed to load");
+          setIsLoading(false);
+        }}
       />
 
-      {/* スピナーのアニメーションとレスポンシブデザイン */}
       <style jsx>{`
         @keyframes spin {
           0% {
@@ -95,9 +107,9 @@ const HidenshoPage = () => {
 
         @media (max-width: 768px) {
           .logout-button {
-            top: auto; /* 上の配置を無効化 */
-            bottom: 10px; /* 画面下部に配置 */
-            right: 10px; /* 右下に配置 */
+            top: auto;
+            bottom: 10px;
+            right: 10px;
           }
         }
       `}</style>
@@ -106,3 +118,4 @@ const HidenshoPage = () => {
 };
 
 export default withAuth(HidenshoPage);
+
