@@ -6,6 +6,8 @@ import { auth } from "../utils/firebase";
 import { useRouter } from "next/navigation";
 import withAuth from "../hoc/withAuth";
 
+const loading_time_max=5000;
+
 const HidenshoPage = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
@@ -22,10 +24,9 @@ const HidenshoPage = () => {
   };
 
   useEffect(() => {
-    // セーフガード: 10秒後に強制的にloadingを解除
     const timeout = setTimeout(() => {
       setIsLoading(false);
-    }, 10000);
+    }, loading_time_max);
     return () => clearTimeout(timeout);
   }, []);
 
@@ -82,11 +83,11 @@ const HidenshoPage = () => {
         onLoad={handleIframeLoad}
         onError={() => {
           console.error("iframe failed to load");
-          setIsLoading(false); // ロード失敗でもloading解除
+          setIsLoading(false);
         }}
       />
 
-      {/* スピナーのアニメーションとレスポンシブデザイン */}
+      {/* スピナー */}
       <style jsx>{`
         @keyframes spin {
           0% {
