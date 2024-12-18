@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { auth } from '../utils/firebase';
-import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence, onAuthStateChanged } from 'firebase/auth';
+import { setPersistence, browserLocalPersistence, browserSessionPersistence, onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import '../styles/styles.css'
