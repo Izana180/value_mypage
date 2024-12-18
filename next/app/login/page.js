@@ -33,7 +33,7 @@ export default function LoginPage() {
       await setPersistence(auth, persistence);
 
       // ログイン
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      // const userCredential = await signInWithEmailAndPassword(auth, email, password);
       router.push('/hidensho');
     } catch (error) {
       console.error('Login error:', error);
@@ -48,7 +48,6 @@ export default function LoginPage() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>VALUE就活 マイページ</title>
         <link rel="icon" href="/favicon.png" type="image/png" />
-        <link rel="stylesheet" href="/styles.css" />
       </Head>
       <h1>login with</h1>
       <a href="https://valueshukatsu.com/" className="logo-link">
