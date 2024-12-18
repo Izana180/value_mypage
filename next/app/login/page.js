@@ -5,6 +5,8 @@ import Head from 'next/head';
 import { auth } from '../utils/firebase';
 import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence, onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import '../styles/styles.css'
 
 export default function LoginPage() {
   const router = useRouter();
@@ -32,9 +34,9 @@ export default function LoginPage() {
 
       // ログイン
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
       router.push('/hidensho');
     } catch (error) {
+      console.error('Login error:', error);
       setError('idかパスワードが間違っています。');
     }
   };
@@ -50,7 +52,7 @@ export default function LoginPage() {
       </Head>
       <h1>login with</h1>
       <a href="https://valueshukatsu.com/" className="logo-link">
-        <img src="/logo.png" alt="VALUE就活" className="logo" />
+        <Image src="/logo.png" alt="VALUE就活" className="logo" width={200} height={100} />
       </a>
       <form method="POST" className="login-form" onSubmit={handleLogin}>
         <input
