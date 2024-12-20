@@ -5,7 +5,6 @@ import Head from 'next/head';
 import { auth } from '../utils/firebase';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
-import '../styles/styles.css'
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
@@ -21,7 +20,6 @@ export default function ForgotPasswordPage() {
       await sendPasswordResetEmail(auth, email);
       setMessage('パスワードリセット用のメールを送信しました。メールボックスを確認してください。');
     } catch (err) {
-      console.error('Error sending password reset email:', err);
       setError('メールの送信に失敗しました。メールアドレスを再確認してください。');
     }
   };
@@ -33,6 +31,7 @@ export default function ForgotPasswordPage() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>パスワードリセット</title>
         <link rel="icon" href="/favicon.png" type="image/png" />
+        <link rel="stylesheet" href="/styles.css" />
       </Head>
 
       <h1>パスワードを忘れた場合</h1>

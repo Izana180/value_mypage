@@ -3,10 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { auth } from '../utils/firebase';
-import { setPersistence, browserLocalPersistence, browserSessionPersistence, onAuthStateChanged } from 'firebase/auth';
+import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence, onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import '../styles/styles.css'
 
 export default function LoginPage() {
   const router = useRouter();
@@ -33,10 +31,10 @@ export default function LoginPage() {
       await setPersistence(auth, persistence);
 
       // ログイン
-      // const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
       router.push('/hidensho');
     } catch (error) {
-      console.error('Login error:', error);
       setError('idかパスワードが間違っています。');
     }
   };
@@ -48,10 +46,11 @@ export default function LoginPage() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>VALUE就活 マイページ</title>
         <link rel="icon" href="/favicon.png" type="image/png" />
+        <link rel="stylesheet" href="/styles.css" />
       </Head>
       <h1>login with</h1>
       <a href="https://valueshukatsu.com/" className="logo-link">
-        <Image src="/logo.png" alt="VALUE就活" className="logo" width={200} height={100} />
+        <img src="/logo.png" alt="VALUE就活" className="logo" />
       </a>
       <form method="POST" className="login-form" onSubmit={handleLogin}>
         <input

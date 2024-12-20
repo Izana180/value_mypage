@@ -21,10 +21,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+let analytics;
 if (typeof window !== 'undefined') {
   isSupported().then((supported) => {
     if (supported) {
-      getAnalytics(app);
+      analytics = getAnalytics(app);
     }
   });
 }
