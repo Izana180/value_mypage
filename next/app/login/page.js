@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { auth } from '../utils/firebase';
+// eslint-disable-next-line no-unused-vars
 import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence, onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 
@@ -32,6 +33,7 @@ export default function LoginPage() {
 
       // ログイン
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      // eslint-disable-next-line no-unused-vars
       const user = userCredential.user;
       router.push('/hidensho');
     } catch (error) {
