@@ -6,6 +6,9 @@ import { auth } from '../utils/firebase';
 // eslint-disable-next-line no-unused-vars
 import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence, onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import '../styles/styles.css';
+
 
 export default function LoginPage() {
   const router = useRouter();
@@ -36,7 +39,7 @@ export default function LoginPage() {
       // eslint-disable-next-line no-unused-vars
       const user = userCredential.user;
       router.push('/hidensho');
-    } catch (error) {
+    } catch (_error) {
       setError('idかパスワードが間違っています。');
     }
   };
@@ -48,11 +51,10 @@ export default function LoginPage() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>VALUE就活 マイページ</title>
         <link rel="icon" href="/favicon.png" type="image/png" />
-        <link rel="stylesheet" href="/styles.css" />
       </Head>
       <h1>login with</h1>
       <a href="https://valueshukatsu.com/" className="logo-link">
-        <img src="/logo.png" alt="VALUE就活" className="logo" />
+        <Image src="/logo.png" alt="VALUE就活" className="logo" width={200} height={100} />
       </a>
       <form method="POST" className="login-form" onSubmit={handleLogin}>
         <input
