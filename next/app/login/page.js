@@ -36,10 +36,11 @@ export default function LoginPage() {
 
       // ログイン
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      // eslint-disable-next-line no-unused-vars
       const user = userCredential.user;
+      console.log(user);
       router.push('/hidensho');
-    } catch (_error) {
+    } catch (error) {
+      console.error(error);
       setError('idかパスワードが間違っています。');
     }
   };
