@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { signOut } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../utils/firebase";
 import { useRouter } from "next/navigation";
 import withAuth from "../hoc/withAuth";
@@ -11,6 +11,7 @@ const loading_time_max=5000;
 const HidenshoPage = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const handleLogout = async () => {
     const confirm = window.confirm("ログアウトしますか？");
@@ -24,11 +25,27 @@ const HidenshoPage = () => {
   };
 
   useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsAuthenticated(true);
+        setIsLoading(false);
+      } else {
+        setIsAuthenticated(false);
+        router.push("/login");
+      }
+    });    
+
     const timeout = setTimeout(() => {
-      setIsLoading(false);
+      if(!isAuthenticated){
+        setIsLoading(false);
+      }
     }, loading_time_max);
-    return () => clearTimeout(timeout);
-  }, []);
+    
+    return () => {
+      unsubscribe();
+      clearTimeout(timeout);
+    };
+  }, [isAuthenticated, router]);
 
   const handleIframeLoad = () => {
     console.log("iframe successfully loaded");
@@ -72,20 +89,22 @@ const HidenshoPage = () => {
       )}
 
       {/* Alist iframe */}
-      <iframe
-        src={process.env.NEXT_PUBLIC_ALIST_URL}
-        style={{
-          width: "100%",
-          height: "100%",
-          border: "none",
-        }}
-        title="Hidensho Alist"
-        onLoad={handleIframeLoad}
-        onError={() => {
-          console.error("iframe failed to load");
-          setIsLoading(false);
-        }}
-      />
+      {!isLoading && isAuthenticated && (
+        <iframe
+          src={process.env.NEXT_PUBLIC_ALIST_URL}
+          style={{
+            width: "100%",
+            height: "100%",
+            border: "none",
+          }}
+          title="Hidensho Alist"
+          onLoad={handleIframeLoad}
+          onError={() => {
+            console.error("iframe failed to load");
+            setIsLoading(false);
+          }}
+        />
+      )}
 
       {/* スピナー */}
       <style jsx>{`
