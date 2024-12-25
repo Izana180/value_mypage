@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { auth } from '../utils/firebase';
 import { sendPasswordResetEmail } from 'firebase/auth';
@@ -12,17 +12,32 @@ export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [lastRequestTime, setLastRequestTime] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
     setError('');
+
+    const nowTime = new Date().getTime();
+
+    if(lastRequestTime && nowTime - lastRequestTime < 1 * 60 * 1000){
+      setError('メールは1分以内に再送信できません。しばらくしてからもう一度お試しください。');
+      return;
+    }
+
     try {
       await sendPasswordResetEmail(auth, email);
       setMessage('パスワードリセット用のメールを送信しました。メールボックスを確認してください。');
+      setLastRequestTime(nowTime);
     } catch (error) {
       console.error(error);
-      setError('メールの送信に失敗しました。メールアドレスを再確認してください。');
+      if(error.code == 'auth/uset-not-found'){
+        setError('登録が確認できません。メールアドレスを確認してください。');
+      }
+      else{
+        setError('メールの送信に失敗しました。メールアドレスを再確認してください。');
+      }
     }
   };
 
@@ -35,7 +50,6 @@ export default function ForgotPasswordPage() {
         <link rel="icon" href="/favicon.png" type="image/png" />
       </Head>
 
-      <h1>パスワードを忘れた場合</h1>
       <form className="forgot-password-form" onSubmit={handleSubmit}>
         <p>パスワードをリセットするためのリンクを送信するメールアドレスを入力してください。</p>
         <input
