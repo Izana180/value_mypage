@@ -24,7 +24,9 @@ const HidenshoPage = () => {
     }
   };
 
+
   useEffect(() => {
+    // 非認証ユーザーが直リンクした時にloginにリダイレクトさせる処理
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setIsAuthenticated(true);
@@ -48,7 +50,6 @@ const HidenshoPage = () => {
   }, [isAuthenticated, router]);
 
   const handleIframeLoad = () => {
-    console.log("iframe successfully loaded");
     setIsLoading(false);
   };
 
@@ -100,7 +101,6 @@ const HidenshoPage = () => {
           title="Hidensho Alist"
           onLoad={handleIframeLoad}
           onError={() => {
-            console.error("iframe failed to load");
             setIsLoading(false);
           }}
         />

@@ -30,7 +30,7 @@ export default function LoginPage() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      // rememberDeviceがtrueならローカル永続化、falseならセッション中のみ有効
+      // デバイスを記憶する
       const persistence = rememberDevice ? browserLocalPersistence : browserSessionPersistence;
       await setPersistence(auth, persistence);
 

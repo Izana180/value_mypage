@@ -19,8 +19,8 @@ export default function ForgotPasswordPage() {
     setMessage('');
     setError('');
 
+    // DOS対策(リロードで回避できてしまうので対策が必要か)
     const nowTime = new Date().getTime();
-
     if(lastRequestTime && nowTime - lastRequestTime < 1 * 60 * 1000){
       setError('メールは1分以内に再送信できません。しばらくしてからもう一度お試しください。');
       return;
