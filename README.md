@@ -1,5 +1,6 @@
 ## 概要
 モバイルアプリVALUE就活会員限定のコンテンツ、就活秘伝書を閲覧できるwebサイト。  
+https://value-mypage.vercel.app/
 ![image](https://github.com/user-attachments/assets/6d740329-4e46-4606-af07-03fe3f54df08)
 ブラウザ上でpdf形式の合格体験記を閲覧することができます。
 ※ログイン、コンテンツ閲覧にはVALUE就活学生アカウントが必要です。
