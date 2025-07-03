@@ -1,3 +1,5 @@
+### 説明資料  
+https://www.canva.com/design/DAGn5raVb1Y/WYBqtyvcx1gJe9W4Yi-ftQ/edit?utm_content=DAGn5raVb1Y&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton  
 ## 概要
 モバイルアプリVALUE就活会員限定のコンテンツ、就活秘伝書を閲覧できるwebサイト。  
 https://value-mypage.vercel.app/
